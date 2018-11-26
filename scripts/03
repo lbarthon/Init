@@ -1,0 +1,33 @@
+#!/bin/bash
+
+echo="/bin/echo"
+
+$echo "Ce script a pour but de faciliter votre ajout de tâches cron"
+$echo ""
+$echo "Que voulez vous faire ?"
+$echo "1 - Voir les tâches cron actuelles."
+$echo "2 - Ajouter une tâche cron"
+
+read -p "Choix ? " choix
+
+if [ $choix -eq 1 ] ; then
+	$echo $(cat /etc/crontab | grep -v '^#')
+	exit 1
+fi
+
+if [ $choix -eq 2 ] ; then
+	$echo ""
+	$echo "Ajout d'une nouvelle tache cron."
+	$echo "Si vous ne voulez aucune valeur, veuillez ne mettre une *."
+	$echo "Si une tâche a 5 minute 3 heures, et * en jours & mois, elle sera
+	exécutée tous les jours à 3h05."
+	read -p "Minutes ? " min
+	read -p "Heures ?  " hour
+	read -p "Jours ?   " days
+	read -p "Mois ?    " month
+	read -p "Tâche ?   " task
+	$($echo "$min $hour $day $month $task" | crontab -)
+	$echo "La tâche : $task sera exécutée tous les $month mois, $days jours,
+	$hour heures, $min minutes."
+	exit 1;
+fi

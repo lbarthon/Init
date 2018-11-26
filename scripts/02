@@ -1,0 +1,36 @@
+#!/bin/bash
+
+function isLogged {
+	for user in $(who | awk '{print $1}' | sort | uniq)
+	do
+		if [ "$user" == "$1" ] ; then
+			if [ "$(whoami)" == "$user" ] ; then
+				return 0
+			else
+				return 1
+			fi
+		fi
+	done
+	return 0
+}
+
+user=$1
+
+if [ -n "$user" ] ; then
+	isLogged $user
+	logged=$?
+	if [ $(id -u) -eq 0 ] ; then
+		if [ $logged -eq 1 ] ; then
+			passwd -l $user
+			killall -KILL -u $user
+			deluser --remove-home $user
+			/bin/echo "User deleted."
+		else
+			/bin/echo "User offline or you tried to delete yourself!"
+		fi
+	else
+		/bin/echo "You should be root or sudo this script"
+	fi
+else
+	/bin/echo "usage: ./02 user"
+fi

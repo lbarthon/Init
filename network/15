@@ -1,0 +1,4 @@
+#On ajoute cette ligne à la fin de /etc/hosts
+46.19.122.85	intra.42.fr
+
+#   IP         Vers quoi elle pointe
