@@ -1,0 +1,10 @@
+Pour se connecter en tant que ce nouvel utilisateur :
+En graphique :
+	Bouton power en haut à droite de la vm
+	User actuel
+	Switch User
+	Puis on se log avec le bon user
+
+En SSH:
+	ssh user@ip
+	puis on met le mdp de l'user
