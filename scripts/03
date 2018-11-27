@@ -2,15 +2,22 @@
 
 echo="/bin/echo"
 
+if [ $(id -u) -ne 0 ] ; then
+	$echo "Erreur, ce script doit être lancé en tant que root / sudo."
+	exit
+fi
+
 $echo "Ce script a pour but de faciliter votre ajout de tâches cron"
 $echo ""
 $echo "Que voulez vous faire ?"
 $echo "1 - Voir les tâches cron actuelles."
 $echo "2 - Ajouter une tâche cron"
+$echo "3 - Update le système + journalier"
 
 read -p "Choix ? " choix
 
 if [ $choix -eq 1 ] ; then
+	$echo ""
 	$echo $(cat /etc/crontab | grep -v '^#')
 	exit 1
 fi
@@ -30,4 +37,16 @@ if [ $choix -eq 2 ] ; then
 	$echo "La tâche : $task sera exécutée tous les $month mois, $days jours,
 	$hour heures, $min minutes."
 	exit 1;
+fi
+
+if [ $choix -eq 3 ] ; then
+	$echo ""
+	$echo "--> apt-get upgrade"
+	apt-get upgrade
+	$echo "--> apt-get update"
+	apt-get update
+	$echo "Adding it to crontab..."
+	crontab -l | {cat ; $echo "0 0 * * * apt-get upgrade"} | crontab -
+	crontab -l | {cat ; $echo "0 0 * * * apt-get update"} | crontab -
+	$echo "Done!"
 fi
